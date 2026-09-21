@@ -23,7 +23,8 @@ public sealed class RecipeManager : IRecipeManager
         if (recipes is null)
         {
             throw new ArgumentNullException();
-        } else
+        }
+        else
         {
             foreach (var recipe in recipes)
             {
@@ -62,17 +63,18 @@ public sealed class RecipeManager : IRecipeManager
         }
     }
 
-    public Recipe? FindRecipe(int recipeId){
+    public Recipe? FindRecipe(int recipeId)
+    {
         if (recipes.ContainsKey(recipeId))
         {
             return recipes[recipeId];
-        } 
+        }
         else
         {
             return null;
         }
     }
-        
+
 
     public bool RemoveRecipe(int recipeId)
     {
@@ -87,14 +89,30 @@ public sealed class RecipeManager : IRecipeManager
         }
     }
 
-    public int AddIngredientsToShoppingList(int recipeId) =>
-        throw new NotImplementedException("Part A: implement AddIngredientsToShoppingList.");
+    public int AddIngredientsToShoppingList(int recipeId)
+    {
+        var recipe = FindRecipe(recipeId);
+        if (recipe is null)
+        {
+            return 0;
+        }
+        else
+        {
+            foreach (var ingredient in recipe.Ingredients)
+            {
+                shoppingList.Add(ingredient);
+            }
+        }
+        return recipe.Ingredients.Count;
+    }
 
-    public IReadOnlyList<string> GetShoppingList() =>
-        throw new NotImplementedException("Part A: implement GetShoppingList.");
+    public IReadOnlyList<string> GetShoppingList()
+    {
+        return new List<string>(shoppingList);
+    }
 
     public void ClearShoppingList() =>
-        throw new NotImplementedException("Part A: implement ClearShoppingList.");
+        shoppingList.Clear();
 
     public bool AddRecipeToCookingPlan(int recipeId) =>
         throw new NotImplementedException("Part A: implement AddRecipeToCookingPlan.");
