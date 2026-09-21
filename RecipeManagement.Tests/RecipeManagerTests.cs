@@ -83,6 +83,43 @@ public sealed class RecipeManagerTests
     }
 
     [Fact]
+    public void AddIngredientsToShoppingList_AddsIngredientsInOrder()
+    {
+        var manager = CreateManager();
+        manager.AddRecipe(new Recipe
+        {
+            Id = 30,
+            Title = "Recipe C",
+            Ingredients = new() { "1 cup flour", "2 eggs" }
+        });
+
+        Assert.Equal(2, manager.AddIngredientsToShoppingList(30));
+        Assert.Equal(new[] { "1 cup flour", "2 eggs" }, manager.GetShoppingList());
+        Assert.Equal(2, manager.ShoppingItemCount);
+    }
+
+    [Fact]
+    public void AddIngredientsToShoppingList_ReturnsZeroForMissingRecipe()
+    {
+        var manager = CreateManager();
+
+        Assert.Equal(0, manager.AddIngredientsToShoppingList(99));
+        Assert.Empty(manager.GetShoppingList());
+    }
+
+    [Fact]
+    public void ClearShoppingList_RemovesAllIngredients()
+    {
+        var manager = CreateManager();
+        manager.AddIngredientsToShoppingList(10);
+
+        manager.ClearShoppingList();
+
+        Assert.Empty(manager.GetShoppingList());
+        Assert.Equal(0, manager.ShoppingItemCount);
+    }
+
+    [Fact]
     public void InstructionsAreCompletedInFileOrder()
     {
         var manager = CreateManager();
