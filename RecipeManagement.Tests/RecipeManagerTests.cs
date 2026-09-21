@@ -189,6 +189,37 @@ public sealed class RecipeManagerTests
     }
 
     [Fact]
+    public void InstructionsReturnNullWhenQueueIsEmpty()
+    {
+        var manager = CreateManager();
+
+        Assert.Null(manager.PeekNextInstruction());
+        Assert.Null(manager.CompleteNextInstruction());
+    }
+
+    [Fact]
+    public void StartCookingReturnsFalseForRecipeWithoutInstructions()
+    {
+        var manager = CreateManager();
+
+        Assert.False(manager.StartCooking(20));
+        Assert.False(manager.StartCooking(99));
+    }
+
+    [Fact]
+    public void StartCookingReplacesPreviousInstructions()
+    {
+        var manager = CreateManager();
+
+        manager.StartCooking(10);
+        manager.CompleteNextInstruction();
+        manager.StartCooking(10);
+
+        Assert.Equal("First step", manager.PeekNextInstruction());
+        Assert.Equal(2, manager.PendingInstructionCount);
+    }
+
+    [Fact]
     public void RemovedRecipesAreRestoredLastInFirstOut()
     {
         var manager = CreateManager();

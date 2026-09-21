@@ -37,4 +37,4 @@ Until you implement `RecipeManager`, menu options print a **Not implemented** me
 
 ## AI acknowledgement
 
-Include the required AI acknowledgement statement in your submission as described in the assignment specification.
+I used Google's Gemini chatbot to help me understand some errors I encountered. I did not copy or adapt AI-generated code or other material into my submission. I developed the submitted solution myself based on my understanding of the course material.
