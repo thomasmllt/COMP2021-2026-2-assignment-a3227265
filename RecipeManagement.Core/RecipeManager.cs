@@ -139,11 +139,28 @@ public sealed class RecipeManager : IRecipeManager
         return true;
     }
 
-    public bool RestoreLastRemovedRecipe() =>
-        throw new NotImplementedException("Part A: implement RestoreLastRemovedRecipe.");
+    public bool RestoreLastRemovedRecipe()
+    {
+        if (removedRecipes.Count > 0)
+        {
+            return AddRecipeToCookingPlan(removedRecipes.Pop());
+        } else
+        {
+            return false;
+        }
+    }
 
-    public int? PeekLastRemovedRecipe() =>
-        throw new NotImplementedException("Part A: implement PeekLastRemovedRecipe.");
+    public int? PeekLastRemovedRecipe()
+    {
+        if (removedRecipes.Count > 0)
+        {
+            return removedRecipes.Peek();
+        }
+        else 
+        {
+            return null;
+        }
+    }
 
     public IReadOnlyList<int> GetCookingPlan()
     {
