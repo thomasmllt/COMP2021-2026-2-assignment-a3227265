@@ -120,6 +120,49 @@ public sealed class RecipeManagerTests
     }
 
     [Fact]
+    public void AddRecipeToCookingPlan_AddsRecipesInOrder()
+    {
+        var manager = CreateManager();
+
+        Assert.True(manager.AddRecipeToCookingPlan(10));
+        Assert.True(manager.AddRecipeToCookingPlan(20));
+
+        Assert.Equal(new[] { 10, 20 }, manager.GetCookingPlan());
+        Assert.Equal(2, manager.CookingPlanCount);
+    }
+
+    [Fact]
+    public void AddRecipeToCookingPlan_ReturnsFalseForDuplicateRecipe()
+    {
+        var manager = CreateManager();
+
+        Assert.True(manager.AddRecipeToCookingPlan(10));
+        Assert.False(manager.AddRecipeToCookingPlan(10));
+        Assert.Equal(new[] { 10 }, manager.GetCookingPlan());
+    }
+
+    [Fact]
+    public void RemoveRecipeFromCookingPlan_PushesRecipeToHistory()
+    {
+        var manager = CreateManager();
+        manager.AddRecipeToCookingPlan(10);
+
+        Assert.True(manager.RemoveRecipeFromCookingPlan(10));
+        Assert.Empty(manager.GetCookingPlan());
+        Assert.Equal(10, manager.PeekLastRemovedRecipe());
+    }
+
+    [Fact]
+    public void RemoveRecipeFromCookingPlan_ReturnsFalseForMissingRecipe()
+    {
+        var manager = CreateManager();
+
+        Assert.False(manager.RemoveRecipeFromCookingPlan(10));
+        Assert.Empty(manager.GetCookingPlan());
+        Assert.Equal(0, manager.RemovedRecipeCount);
+    }
+
+    [Fact]
     public void InstructionsAreCompletedInFileOrder()
     {
         var manager = CreateManager();
