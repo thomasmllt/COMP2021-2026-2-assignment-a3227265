@@ -20,7 +20,23 @@ public sealed class RecipeManager : IRecipeManager
     public RecipeManager(IEnumerable<Recipe> recipes)
     {
         // TODO Part A: validate recipes and build Dictionary<int, Recipe>.
-        _ = recipes;
+        if (recipes is null)
+        {
+            throw new ArgumentNullException();
+        } else
+        {
+            foreach (var recipe in recipes)
+            {
+                if ((recipe.Id <= 0) || string.IsNullOrWhiteSpace(recipe.Title) || this.recipes.ContainsKey(recipe.Id))
+                {
+                    throw new ArgumentException();
+                }
+                else
+                {
+                    this.recipes.Add(recipe.Id, recipe);
+                }
+            }
+        }
     }
 
     public int RecipeCount => recipes.Count;
