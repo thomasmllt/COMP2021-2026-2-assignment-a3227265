@@ -163,6 +163,22 @@ public sealed class RecipeManagerTests
     }
 
     [Fact]
+    public void PeekLastRemovedRecipe_ReturnsNullWhenHistoryIsEmpty()
+    {
+        var manager = CreateManager();
+
+        Assert.Null(manager.PeekLastRemovedRecipe());
+    }
+
+    [Fact]
+    public void RestoreLastRemovedRecipe_ReturnsFalseWhenHistoryIsEmpty()
+    {
+        var manager = CreateManager();
+
+        Assert.False(manager.RestoreLastRemovedRecipe());
+    }
+
+    [Fact]
     public void InstructionsAreCompletedInFileOrder()
     {
         var manager = CreateManager();
