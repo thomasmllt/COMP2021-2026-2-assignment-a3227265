@@ -17,6 +17,72 @@ public sealed class RecipeManagerTests
     }
 
     [Fact]
+    public void FindRecipe_ReturnsNullWhenRecipeDoesNotExist()
+    {
+        var manager = CreateManager();
+
+        Assert.Null(manager.FindRecipe(99));
+    }
+
+    [Fact]
+    public void AddRecipe_AddsRecipeToCatalogue()
+    {
+        var manager = CreateManager();
+        var recipe = new Recipe { Id = 30, Title = "Recipe C" };
+
+        Assert.True(manager.AddRecipe(recipe));
+        Assert.Equal(3, manager.RecipeCount);
+        Assert.Equal(recipe, manager.FindRecipe(30));
+    }
+
+    [Fact]
+    public void AddRecipe_ReturnsFalseForDuplicateId()
+    {
+        var manager = CreateManager();
+        var duplicate = new Recipe { Id = 10, Title = "Another Recipe" };
+
+        Assert.False(manager.AddRecipe(duplicate));
+        Assert.Equal(2, manager.RecipeCount);
+    }
+
+    [Fact]
+    public void AddRecipe_ReturnsFalseForInvalidRecipe()
+    {
+        var manager = CreateManager();
+        var invalidRecipe = new Recipe { Id = 0, Title = "Invalid Recipe" };
+
+        Assert.False(manager.AddRecipe(invalidRecipe));
+        Assert.Equal(2, manager.RecipeCount);
+    }
+
+    [Fact]
+    public void AddRecipe_ThrowsForNullRecipe()
+    {
+        var manager = CreateManager();
+
+        Assert.Throws<ArgumentNullException>(() => manager.AddRecipe(null!));
+    }
+
+    [Fact]
+    public void RemoveRecipe_RemovesRecipeFromCatalogue()
+    {
+        var manager = CreateManager();
+
+        Assert.True(manager.RemoveRecipe(10));
+        Assert.Equal(1, manager.RecipeCount);
+        Assert.Null(manager.FindRecipe(10));
+    }
+
+    [Fact]
+    public void RemoveRecipe_ReturnsFalseWhenRecipeDoesNotExist()
+    {
+        var manager = CreateManager();
+
+        Assert.False(manager.RemoveRecipe(99));
+        Assert.Equal(2, manager.RecipeCount);
+    }
+
+    [Fact]
     public void InstructionsAreCompletedInFileOrder()
     {
         var manager = CreateManager();
