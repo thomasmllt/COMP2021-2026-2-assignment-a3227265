@@ -16,6 +16,7 @@ public sealed class RecipeManager : IRecipeManager
     private LinkedList<int> cookingPlan = new LinkedList<int>();
     private Stack<int> removedRecipes = new Stack<int>();
     private Queue<string> instructions = new Queue<string>();
+    private HashSet<int> savedRecipes = new HashSet<int>();
 
     public RecipeManager(IEnumerable<Recipe> recipes)
     {

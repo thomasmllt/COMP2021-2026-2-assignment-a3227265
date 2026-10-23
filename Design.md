@@ -6,6 +6,11 @@ Complete this document for **Part B**.
 
 Name the C# collection you selected for the saved/favourite feature and explain why it suits add, remove, duplicate prevention and membership checks.
 
+For the saved recipe collection, I chose to use a HashSet<Int> of recipe ids because :
+- it has these methods: Add, Contains and Remove
+- recipe ids are unique and a hash set prevents duplicate ids automatically
+- it is better than a dictionary because it contains juste the useful information ie. the id. 
+
 ## 2. Integration
 
 In a short paragraph, explain how the new Part B features use the existing Part A `RecipeManager` and recipe catalogue.
