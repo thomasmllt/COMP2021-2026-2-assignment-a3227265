@@ -145,7 +145,8 @@ public sealed class RecipeManager : IRecipeManager
         if (removedRecipes.Count > 0)
         {
             return AddRecipeToCookingPlan(removedRecipes.Pop());
-        } else
+        }
+        else
         {
             return false;
         }
@@ -157,7 +158,7 @@ public sealed class RecipeManager : IRecipeManager
         {
             return removedRecipes.Peek();
         }
-        else 
+        else
         {
             return null;
         }
@@ -183,7 +184,8 @@ public sealed class RecipeManager : IRecipeManager
         return false;
     }
 
-    public string? PeekNextInstruction(){
+    public string? PeekNextInstruction()
+    {
         if (instructions.Count > 0)
         {
             return instructions.Peek();
@@ -194,7 +196,8 @@ public sealed class RecipeManager : IRecipeManager
         }
     }
 
-    public string? CompleteNextInstruction(){
+    public string? CompleteNextInstruction()
+    {
         if (instructions.Count > 0)
         {
             return instructions.Dequeue();
@@ -214,15 +217,22 @@ public sealed class RecipeManager : IRecipeManager
     public IReadOnlyList<Recipe> GetHighestProteinRecipes(int count) =>
         throw new NotImplementedException("Part B: implement GetHighestProteinRecipes.");
 
-    public bool AddSavedRecipe(int recipeId) =>
-        throw new NotImplementedException("Part B: implement AddSavedRecipe.");
+    public bool AddSavedRecipe(int recipeId)
+    {
+        if (!recipes.ContainsKey(recipeId))
+        {
+            return false;
+        }
+
+        return savedRecipes.Add(recipeId);
+    }
 
     public bool RemoveSavedRecipe(int recipeId) =>
-        throw new NotImplementedException("Part B: implement RemoveSavedRecipe.");
+        savedRecipes.Remove(recipeId);
 
     public bool IsRecipeSaved(int recipeId) =>
-        throw new NotImplementedException("Part B: implement IsRecipeSaved.");
+        savedRecipes.Contains(recipeId);
 
     public IReadOnlyList<int> GetSavedRecipes() =>
-        throw new NotImplementedException("Part B: implement GetSavedRecipes.");
+        new List<int>(savedRecipes);
 }
