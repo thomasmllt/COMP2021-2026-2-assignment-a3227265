@@ -17,6 +17,32 @@ public sealed class RecipeManagerTests
     }
 
     [Fact]
+    public void Constructor_ThrowsForNullRecipes()
+    {
+        Assert.Throws<ArgumentNullException>(() => new RecipeManager(null!));
+    }
+
+    [Fact]
+    public void Constructor_ThrowsForInvalidRecipe()
+    {
+        var invalidRecipe = new Recipe { Id = 0, Title = "Invalid Recipe" };
+
+        Assert.Throws<ArgumentException>(() => new RecipeManager(new[] { invalidRecipe }));
+    }
+
+    [Fact]
+    public void Constructor_ThrowsForDuplicateRecipeId()
+    {
+        var recipes = new[]
+        {
+            new Recipe { Id = 10, Title = "Recipe A" },
+            new Recipe { Id = 10, Title = "Recipe B" }
+        };
+
+        Assert.Throws<ArgumentException>(() => new RecipeManager(recipes));
+    }
+
+    [Fact]
     public void FindRecipe_ReturnsNullWhenRecipeDoesNotExist()
     {
         var manager = CreateManager();
@@ -80,6 +106,17 @@ public sealed class RecipeManagerTests
 
         Assert.False(manager.RemoveRecipe(99));
         Assert.Equal(2, manager.RecipeCount);
+    }
+
+    [Fact]
+    public void RemoveRecipe_ReturnsFalseWhenRecipeIsInCookingPlan()
+    {
+        var manager = CreateManager();
+        manager.AddRecipeToCookingPlan(10);
+
+        Assert.False(manager.RemoveRecipe(10));
+        Assert.Equal(2, manager.RecipeCount);
+        Assert.Equal(new[] { 10 }, manager.GetCookingPlan());
     }
 
     [Fact]
@@ -230,6 +267,19 @@ public sealed class RecipeManagerTests
         Assert.Equal(20, manager.PeekLastRemovedRecipe());
         Assert.True(manager.RestoreLastRemovedRecipe());
         Assert.Equal(new[] { 20 }, manager.GetCookingPlan());
+    }
+
+    [Fact]
+    public void RestoreLastRemovedRecipe_PreservesHistoryWhenRestoreFails()
+    {
+        var manager = CreateManager();
+        manager.AddRecipeToCookingPlan(10);
+        manager.RemoveRecipeFromCookingPlan(10);
+        manager.RemoveRecipe(10);
+
+        Assert.False(manager.RestoreLastRemovedRecipe());
+        Assert.Equal(1, manager.RemovedRecipeCount);
+        Assert.Equal(10, manager.PeekLastRemovedRecipe());
     }
 
     [Fact]

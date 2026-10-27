@@ -144,12 +144,15 @@ public sealed class RecipeManager : IRecipeManager
     {
         if (removedRecipes.Count > 0)
         {
-            return AddRecipeToCookingPlan(removedRecipes.Pop());
+            var recipeId = removedRecipes.Peek();
+            if (AddRecipeToCookingPlan(recipeId))
+            {
+                removedRecipes.Pop();
+                return true;
+            }
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     public int? PeekLastRemovedRecipe()
