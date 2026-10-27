@@ -232,6 +232,47 @@ public sealed class RecipeManagerTests
         Assert.Equal(new[] { 20 }, manager.GetCookingPlan());
     }
 
+    [Fact]
+    public void AddSavedRecipe_SavesExistingRecipeOnlyOnce()
+    {
+        var manager = CreateManager();
+
+        Assert.True(manager.AddSavedRecipe(10));
+        Assert.False(manager.AddSavedRecipe(10));
+        Assert.True(manager.IsRecipeSaved(10));
+        Assert.Equal(new[] { 10 }, manager.GetSavedRecipes());
+    }
+
+    [Fact]
+    public void AddSavedRecipe_ReturnsFalseForMissingRecipe()
+    {
+        var manager = CreateManager();
+
+        Assert.False(manager.AddSavedRecipe(99));
+        Assert.False(manager.IsRecipeSaved(99));
+        Assert.Empty(manager.GetSavedRecipes());
+    }
+
+    [Fact]
+    public void RemoveSavedRecipe_ReturnsFalseWhenRecipeIsNotSaved()
+    {
+        var manager = CreateManager();
+
+        Assert.False(manager.RemoveSavedRecipe(10));
+        Assert.Empty(manager.GetSavedRecipes());
+    }
+
+    [Fact]
+    public void RemoveSavedRecipe_RemovesSavedRecipe()
+    {
+        var manager = CreateManager();
+        manager.AddSavedRecipe(10);
+
+        Assert.True(manager.RemoveSavedRecipe(10));
+        Assert.False(manager.IsRecipeSaved(10));
+        Assert.Empty(manager.GetSavedRecipes());
+    }
+
     private static RecipeManager CreateManager()
     {
         return new RecipeManager(new[]
