@@ -305,11 +305,11 @@ public sealed class RecipeManagerTests
     }
 
     [Fact]
-    public void Searches_ReturnEmptyForBlankText()
+    public void SearchByTitle_ReturnsAllRecipesForBlankText()
     {
         var manager = CreateManager();
 
-        Assert.Empty(manager.SearchByTitle(" "));
+        Assert.Equal(2, manager.SearchByTitle(" ").Count);
         Assert.Empty(manager.SearchByIngredient(string.Empty));
     }
 

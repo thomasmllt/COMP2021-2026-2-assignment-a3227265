@@ -216,7 +216,7 @@ public sealed class RecipeManager : IRecipeManager
     {
         if (string.IsNullOrWhiteSpace(searchText))
         {
-            return new List<Recipe>();
+            return recipes.Values.ToList();
         }
 
         string normalizedSearchText = searchText.ToLowerInvariant();
