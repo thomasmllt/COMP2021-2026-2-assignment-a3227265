@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RecipeManagement.Core;
 
@@ -211,14 +212,48 @@ public sealed class RecipeManager : IRecipeManager
         }
     }
 
-    public IReadOnlyList<Recipe> SearchByTitle(string searchText) =>
-        throw new NotImplementedException("Part B: implement SearchByTitle.");
+    public IReadOnlyList<Recipe> SearchByTitle(string searchText)
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            return new List<Recipe>();
+        }
 
-    public IReadOnlyList<Recipe> SearchByIngredient(string searchText) =>
-        throw new NotImplementedException("Part B: implement SearchByIngredient.");
+        string normalizedSearchText = searchText.ToLowerInvariant();
 
-    public IReadOnlyList<Recipe> GetHighestProteinRecipes(int count) =>
-        throw new NotImplementedException("Part B: implement GetHighestProteinRecipes.");
+        return recipes.Values
+            .Where(recipe => recipe.Title.ToLowerInvariant().Contains(normalizedSearchText))
+            .ToList();
+    }
+
+    public IReadOnlyList<Recipe> SearchByIngredient(string searchText)
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            return new List<Recipe>();
+        }
+
+        string normalizedSearchText = searchText.ToLowerInvariant();
+
+        return recipes.Values
+            .Where(recipe => recipe.Ingredients.Any(ingredient =>
+                ingredient.ToLowerInvariant().Contains(normalizedSearchText)))
+            .ToList();
+    }
+
+    public IReadOnlyList<Recipe> GetHighestProteinRecipes(int count)
+    {
+        if (count <= 0)
+        {
+            return new List<Recipe>();
+        }
+
+        return recipes.Values
+            .Where(recipe => recipe.Nutrition?.ProteinG.HasValue == true)
+            .OrderByDescending(recipe => recipe.Nutrition!.ProteinG)
+            .Take(count)
+            .ToList();
+    }
 
     public bool AddSavedRecipe(int recipeId)
     {
