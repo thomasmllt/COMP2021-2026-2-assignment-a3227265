@@ -283,6 +283,77 @@ public sealed class RecipeManagerTests
     }
 
     [Fact]
+    public void SearchByTitle_ReturnsMatchingRecipesIgnoringCase()
+    {
+        var manager = CreateManager();
+
+        var results = manager.SearchByTitle("recipe a");
+
+        Assert.Single(results);
+        Assert.Equal(10, results[0].Id);
+    }
+
+    [Fact]
+    public void SearchByIngredient_ReturnsRecipesWithMatchingIngredientIgnoringCase()
+    {
+        var manager = CreateManager();
+
+        var results = manager.SearchByIngredient("APPLE");
+
+        Assert.Single(results);
+        Assert.Equal(10, results[0].Id);
+    }
+
+    [Fact]
+    public void Searches_ReturnEmptyForBlankText()
+    {
+        var manager = CreateManager();
+
+        Assert.Empty(manager.SearchByTitle(" "));
+        Assert.Empty(manager.SearchByIngredient(string.Empty));
+    }
+
+    [Fact]
+    public void GetHighestProteinRecipes_ReturnsDescendingResultsUpToCount()
+    {
+        var manager = CreateManager();
+        manager.AddRecipe(new Recipe
+        {
+            Id = 30,
+            Title = "High Protein Recipe",
+            Nutrition = new NutritionInfo { ProteinG = 30 }
+        });
+        manager.AddRecipe(new Recipe
+        {
+            Id = 40,
+            Title = "Medium Protein Recipe",
+            Nutrition = new NutritionInfo { ProteinG = 20 }
+        });
+
+        var results = manager.GetHighestProteinRecipes(2);
+
+        Assert.Equal(30, results[0].Id);
+        Assert.Equal(40, results[1].Id);
+    }
+
+    [Fact]
+    public void GetHighestProteinRecipes_ExcludesRecipesWithoutProtein()
+    {
+        var manager = CreateManager();
+        manager.AddRecipe(new Recipe
+        {
+            Id = 30,
+            Title = "Protein Recipe",
+            Nutrition = new NutritionInfo { ProteinG = 15 }
+        });
+
+        var results = manager.GetHighestProteinRecipes(5);
+
+        Assert.Single(results);
+        Assert.Equal(30, results[0].Id);
+    }
+
+    [Fact]
     public void AddSavedRecipe_SavesExistingRecipeOnlyOnce()
     {
         var manager = CreateManager();
