@@ -354,6 +354,19 @@ public sealed class RecipeManagerTests
     }
 
     [Fact]
+    public void PartBWorkflow()
+    {
+        var manager = CreateManager();
+        var searchResults = manager.SearchByTitle("recipe a");
+        var recipeId = searchResults[0].Id;
+
+        Assert.True(manager.AddSavedRecipe(recipeId));
+        Assert.True(manager.IsRecipeSaved(recipeId));
+        Assert.True(manager.RemoveSavedRecipe(recipeId));
+        Assert.False(manager.IsRecipeSaved(recipeId));
+    }
+
+    [Fact]
     public void AddSavedRecipe_SavesExistingRecipeOnlyOnce()
     {
         var manager = CreateManager();
